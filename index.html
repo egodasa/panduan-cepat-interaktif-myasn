@@ -1,0 +1,526 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Dasar PDM Mandiri di MyASN 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Blue & Gray -->
+    <!-- Application Structure Plan: Panduan ini diubah menjadi SPA dengan antarmuka tab (Daftar Isi, Persiapan, Prosedur) untuk mengorganisir konten secara logis. Daftar Isi berfungsi sebagai hub navigasi utama. Di dalam tab Prosedur, digunakan pendekatan langkah-demi-langkah. Struktur ini dipilih untuk mengubah panduan statis menjadi pengalaman yang terkelola dan interaktif, memungkinkan pengguna melacak kemajuan mereka dan fokus pada satu tugas pada satu waktu, yang secara signifikan meningkatkan usabilitas. -->
+    <!-- Visualization & Content Choices: Karena dokumen sumber adalah panduan prosedural tanpa data kuantitatif, tidak ada chart yang digunakan. Interaktivitas dicapai melalui: 1) Antarmuka Tab untuk navigasi tingkat atas. 2) Tautan anchor dari Daftar Isi untuk navigasi cepat. 3) Kartu dan ikon yang jelas secara visual. Pilihan ini secara langsung mendukung tujuan untuk membuat panduan lebih mudah diikuti. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-button.active {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .step-card {
+            transition: all 0.3s ease;
+            scroll-margin-top: 20px;
+        }
+        .zoomable-image {
+            cursor: zoom-in;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .tab-content {
+                display: block !important;
+            }
+            .step-card {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div id="app" class="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="text-center mb-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <div class="flex items-center justify-center gap-4 flex-shrink-0">
+                <img src="gambar/logo.png" alt="Logo Pemerintah Kota Pariaman" class="h-20 w-auto">
+                <img src="gambar/asn.png" alt="Logo BerAKHLAK ASN" class="h-16 w-auto hidden sm:block">
+            </div>
+            <div class="sm:text-left flex-grow">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Panduan Interaktif MyASN</h1>
+                <p class="mt-2 text-lg text-gray-600">Pemutakhiran Data Mandiri (PDM) untuk ASN Pemerintah Kota Pariaman</p>
+            </div>
+        </header>
+
+        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg mb-8" role="alert">
+            <p class="font-bold">Penting</p>
+            <p>Panduan ini secara khusus ditujukan bagi ASN di lingkungan Pemerintah Kota Pariaman, karena salah satu langkah krusial di dalamnya adalah memilih BKPSDM Kota Pariaman sebagai unit verifikasi data.</p>
+        </div>
+        
+        <div class="my-8 flex justify-center no-print">
+            <button id="download-btn" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full sm:w-auto justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                Unduh Panduan PDF
+            </button>
+        </div>
+
+        <div class="mb-8 border-b border-gray-200 no-print">
+            <nav class="flex flex-wrap -mb-px" aria-label="Tabs">
+                <button class="tab-button active w-1/3 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="daftarisi">
+                    <span class="mr-2">📚</span> Daftar Isi
+                </button>
+                <button class="tab-button w-1/3 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="persiapan">
+                    <span class="mr-2">⚙️</span> Persiapan
+                </button>
+                <button class="tab-button w-1/3 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="prosedur">
+                    <span class="mr-2">🚀</span> Prosedur PDM
+                </button>
+            </nav>
+        </div>
+
+        <main id="main-content">
+            <div id="daftarisi" class="tab-content">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h2 class="text-2xl font-semibold mb-4">Daftar Isi</h2>
+                    <ul class="space-y-3">
+                        <li><a href="#dasar-hukum" class="toc-link text-blue-600 hover:underline text-lg">A. Dasar Hukum</a></li>
+                        <li>
+                            <a href="#persiapan-myasn" class="toc-link text-blue-600 hover:underline text-lg">B. Persiapan Sebelum Menggunakan MyASN</a>
+                            <ul class="list-disc list-inside ml-6 mt-2 space-y-2 text-md">
+                                <li><a href="#persiapan-myasn" class="toc-link text-gray-700 hover:text-blue-600">1. Aktivasi Autentikasi Dua Faktor (MFA)</a></li>
+                                <li><a href="#kontak-bantuan" class="toc-link text-gray-700 hover:text-blue-600">2. Kontak Bantuan (BKPSDM Kota Pariaman)</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="text-lg font-semibold text-gray-800">C. Prosedur Pemutakhiran Data Mandiri</span>
+                            <ul class="list-disc list-inside ml-6 mt-2 space-y-2 text-md">
+                                <li><a href="#akses-akun" class="toc-link text-gray-700 hover:text-blue-600">1. Mengakses Akun MyASN</a></li>
+                                <li><a href="#unit-verifikasi" class="toc-link text-gray-700 hover:text-blue-600">2. Langkah Wajib Awal: Mengatur Unit Verifikasi</a></li>
+                                <li><a href="#update-profil" class="toc-link text-gray-700 hover:text-blue-600">3. Memperbarui Profil Pribadi (Wajib)</a></li>
+                                <li><a href="#pdm-mandiri" class="toc-link text-gray-700 hover:text-blue-600">4. Data yang Dapat Dimutakhirkan Secara Mandiri (PDM)</a></li>
+                                <li><a href="#bantuan-verifikator" class="toc-link text-gray-700 hover:text-blue-600">5. Data yang Memerlukan Bantuan Verifikator (BKPSDM Kota Pariaman)</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="mt-6 text-right no-print">
+                        <a href="#dasar-hukum" class="toc-link inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Mulai Panduan <span class="ml-2">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="persiapan" class="tab-content hidden">
+                <div class="space-y-6">
+                    <div id="dasar-hukum" class="step-card bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-semibold mb-4">A. Dasar Hukum</h2>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Peraturan Presiden Nomor 95 Tahun 2018</strong> tentang Sistem Pemerintahan Berbasis Elektronik (SPBE).</li>
+                            <li><strong>Keputusan Kepala BKN Nomor 87 Tahun 2021</strong> tentang Pemutakhiran Data Mandiri.</li>
+                            <li><strong>Surat Edaran Kepala BKN Nomor 17 Tahun 2022</strong> tentang Implementasi Layanan Manajemen ASN Berbasis Digital Menggunakan Aplikasi MyASN.</li>
+                        </ul>
+                        <div class="mt-6 flex justify-end no-print">
+                            <a href="#persiapan-myasn" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Persiapan Akun →</a>
+                        </div>
+                    </div>
+
+                    <div id="persiapan-myasn" class="step-card bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-semibold mb-4">B. Persiapan Sebelum Menggunakan MyASN</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">1. Aktivasi Autentikasi Dua Faktor (MFA)</h3>
+                                <p class="text-gray-600 mb-3">Sebelum dapat login, Anda <strong>wajib</strong> mengaktifkan MFA.</p>
+                                <div class="pl-4 border-l-2 border-gray-200">
+                                    <h4 class="font-semibold">a. Unduh Aplikasi Authenticator</h4>
+                                    <p class="text-sm text-gray-500 mb-2">Pilih salah satu aplikasi di bawah ini pada ponsel Anda:</p>
+                                    <ul class="list-inside space-y-1">
+                                        <li><a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=id" target="_blank" class="text-blue-600 hover:underline">Google Authenticator</a></li>
+                                        <li><a href="https://play.google.com/store/apps/details?id=com.twofasapp&hl=id" target="_blank" class="text-blue-600 hover:underline">2FA Authenticator</a> (alternatif)</li>
+                                    </ul>
+                                </div>
+                                <div class="pl-4 border-l-2 border-gray-200 mt-3">
+                                    <h4 class="font-semibold">b. Tautan Panduan Video</h4>
+                                    <ul class="list-inside space-y-1">
+                                        <li><a href="https://www.youtube.com/watch?v=EJrLDNsBI4U" target="_blank" class="text-blue-600 hover:underline">Panduan Aktivasi MFA</a></li>
+                                        <li><a href="https://www.youtube.com/watch?v=6bZPiny-gOo" target="_blank" class="text-blue-600 hover:underline">Panduan Reset Password</a> (jika lupa/ingin ganti)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                             <div id="kontak-bantuan">
+                                <h3 class="text-xl font-semibold text-gray-800">2. Kontak Bantuan (BKPSDM Kota Pariaman)</h3>
+                                <p class="text-gray-600 mb-3">Jika memerlukan bantuan, hubungi Staf BKPSDM Kota Pariaman Bidang Mutasi dan Informasi sesuai dengan Perangkat Daerah Anda:</p>
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-gray-50 rounded-lg border">
+                                        <p><strong>Nila Sumarni, S.Sos, M.Si</strong> (Analis SDM Aparatur Ahli Muda) - <span class="font-mono">082176961632</span></p>
+                                        <p class="text-sm text-gray-500 mt-1">Bertanggung jawab untuk Perangkat Daerah:</p>
+                                        <ul class="list-disc list-inside text-sm text-gray-700 mt-1 pl-4">
+                                            <li>SEKRETARIAT DAERAH</li>
+                                            <li>DINAS KESEHATAN</li>
+                                            <li>DINAS PERINDUSTRIAN, PERDAGANGAN, KOPERASI DAN UKM</li>
+                                            <li>DINAS SATPOL PP DAN DAMKAR</li>
+                                            <li>KECAMATAN PARIAMAN SELATAN</li>
+                                            <li>KECAMATAN PARIAMAN TENGAH</li>
+                                            <li>KECAMATAN PARIAMAN TIMUR</li>
+                                            <li>KECAMATAN PARIAMAN UTARA</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 rounded-lg border">
+                                        <p><strong>Rival Putra Yusni, ST</strong> (Penata Kelola Sistem dan Teknologi Informasi) - <span class="font-mono">081220576433</span></p>
+                                        <p class="text-sm text-gray-500 mt-1">Bertanggung jawab untuk Perangkat Daerah:</p>
+                                        <ul class="list-disc list-inside text-sm text-gray-700 mt-1 pl-4">
+                                            <li>BADAN KEPEGAWAIAN DAN PENGEMBANGAN SUMBER DAYA MANUSIA</li>
+                                            <li>BADAN PENANGGULANGAN BENCANA DAERAH</li>
+                                            <li>BADAN PENGELOLAAN KEUANGAN DAN PENDAPATAN DAERAH</li>
+                                            <li>BADAN PERENCANAAN, PENELITIAN DAN PENGEMBANGAN DAERAH</li>
+                                            <li>DINAS KEPENDUDUKAN DAN PENCATATAN SIPIL</li>
+                                            <li>DINAS KOMUNIKASI DAN INFORMATIKA</li>
+                                            <li>DINAS PARIWISATA DAN KEBUDAYAAN</li>
+                                            <li>DINAS PEKERJAAN UMUM, PENATAAN RUANG DAN PERTANAHAN</li>
+                                            <li>DINAS PEMBERDAYAAN MASYARAKAT DAN DESA</li>
+                                            <li>DINAS PEMBERDAYAAN PEREMPUAN, PERLINDUNGAN ANAK DAN KB</li>
+                                            <li>DINAS PENANAMAN MODAL, PTSP DAN TENAGA KERJA</li>
+                                            <li>DINAS PERHUBUNGAN</li>
+                                            <li>DINAS PERPUSTAKAAN DAN KEARSIPAN</li>
+                                            <li>DINAS PERTANIAN, PANGAN DAN PERIKANAN</li>
+                                            <li>DINAS PERUMAHAN RAKYAT, KAWASAN PERMUKIMAN DAN LH</li>
+                                            <li>DINAS SOSIAL</li>
+                                            <li>INSPEKTORAT</li>
+                                            <li>KANTOR KESBANGPOL</li>
+                                            <li>SEKRETARIAT DEWAN PERWAKILAN RAKYAT DAERAH</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 rounded-lg border">
+                                        <p><strong>Ego Dafma Dasa, S.Kom</strong> (Penata Kelola Sistem dan Teknologi Informasi) - <span class="font-mono">089519649316</span></p>
+                                        <p class="text-sm text-gray-500 mt-1">Bertanggung jawab untuk Perangkat Daerah:</p>
+                                        <ul class="list-disc list-inside text-sm text-gray-700 mt-1 pl-4">
+                                            <li>DINAS PENDIDIKAN PEMUDA DAN OLAHRAGA</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-between no-print">
+                            <a href="#dasar-hukum" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Dasar Hukum</a>
+                            <a href="#akses-akun" class="toc-link inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">Berikutnya: Prosedur PDM →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="prosedur" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div id="akses-akun" class="step-card bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-semibold mb-4">1. Mengakses Akun MyASN</h2>
+                        <ol class="list-decimal list-inside space-y-4">
+                            <li>Buka <a href="https://asndigital.bkn.go.id/" target="_blank" class="text-blue-600 hover:underline font-semibold">asndigital.bkn.go.id</a>.
+                                <img src="gambar/gambar1.jpg" alt="Tampilan halaman utama ASN Digital" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                            <li>Klik <strong>"Login"</strong>, lalu klik <strong>"Masuk"</strong>.
+                                <img src="gambar/gambar2.jpg" alt="Tombol Login dan Masuk di ASN Digital" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                            <li>Masukkan <strong>NIP</strong> dan <strong>Password</strong>, lalu klik <strong>"Sign In"</strong>.
+                                <img src="gambar/gambar3.jpg" alt="Kolom NIP, Password, dan tombol Sign In" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                             <li>Masukkan <strong>kode OTP</strong> dari aplikasi authenticator Anda.
+                                <img src="gambar/gambar4.jpg" alt="Halaman untuk memasukkan kode OTP" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                             <li>Klik <strong>logo BKN</strong> di tengah layar.
+                                <img src="gambar/gambar5.jpg" alt="Logo BKN di dashboard ASN Digital" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                             <li>Klik <strong>"Layanan Individu ASN"</strong>, lalu pilih <strong>"MyASN"</strong>.
+                                <img src="gambar/gambar6.jpg" alt="Menu Layanan Individu ASN dan pilihan MyASN" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                        </ol>
+                        <div class="mt-6 flex justify-between no-print">
+                            <a href="#persiapan-myasn" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Persiapan</a>
+                            <a href="#unit-verifikasi" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Unit Verifikasi →</a>
+                        </div>
+                    </div>
+
+                    <div id="unit-verifikasi" class="step-card bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-semibold mb-4">2. Langkah Wajib Awal: Mengatur Unit Verifikasi</h2>
+                        <p class="mb-4 text-red-600 bg-red-50 p-3 rounded-md">Ini adalah langkah <strong>KRUSIAL</strong> agar setiap data yang Anda ajukan dapat diverifikasi oleh BKPSDM Kota Pariaman.</p>
+                        <ol class="list-decimal list-inside space-y-4">
+                            <li>Di halaman utama MyASN (Home), fokus pada bagian <strong>"Update Data"</strong>. Kemudian, gulir ke bawah dan klik <strong>"Lihat Semua"</strong>.
+                                <img src="gambar/gambar7.jpg" alt="Lokasi bagian Update Data dan tombol Lihat Semua" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                            <li>Pastikan unit verifikasi yang tertera adalah <strong>"BADAN KEPEGAWAIAN DAN PENGEMBANGAN SUMBER DAYA MANUSIA"</strong>.
+                                <img src="gambar/gambar8.jpg" alt="Tampilan Unit Verifikasi yang sudah benar" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                            <li><strong>Jika belum sesuai:</strong>
+                                <ul class="list-disc list-inside pl-5 mt-2 space-y-2">
+                                    <li>Klik tombol <strong>"Ubah"</strong>.</li>
+                                    <li>Di kolom pencarian, ketik <strong>"badan kepegawaian dan pengembangan sumber daya manusia"</strong>.</li>
+                                    <li>Klik <strong>"Pilih"</strong> pada hasil yang muncul, lalu klik <strong>"Simpan"</strong>.</li>
+                                </ul>
+                                <img src="gambar/gambar9.jpg" alt="Proses mengubah Unit Verifikasi" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                        </ol>
+                        <div class="mt-6 flex justify-between no-print">
+                            <a href="#akses-akun" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Akses Akun</a>
+                            <a href="#update-profil" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Update Profil →</a>
+                        </div>
+                    </div>
+
+                    <div id="update-profil" class="step-card bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-semibold mb-4">3. Memperbarui Profil Pribadi (Wajib)</h2>
+                        <ol class="list-decimal list-inside space-y-6">
+                            <li><strong>Akses Menu:</strong> Dari halaman "Update Data", klik ikon <strong>"Riwayat Ubah Profile"</strong>.
+                                <img src="gambar/gambar10.jpg" alt="Lokasi menu Riwayat Ubah Profile" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </li>
+                            <li><strong>Proses Pembaruan:</strong> Lengkapi semua bagian dari atas ke bawah.
+                                <div class="pl-5 mt-2 space-y-4">
+                                    <div class="p-4 border rounded-lg">
+                                        <h4 class="font-bold">A. Informasi Utama (Foto Profil)</h4>
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>Klik pada area foto untuk mengunggah foto formal terbaru.</li>
+                                            <li><strong>Ketentuan:</strong> Pakaian dinas/jas, background warna cerah, max 500 KB.</li>
+                                            <li>Setelah mengganti foto, klik tombol <strong>"Simpan"</strong> di bawah foto.</li>
+                                        </ul>
+                                        <img src="gambar/gambar11.jpg" alt="Tampilan halaman Edit Profile (Foto)" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                                    </div>
+                                     <div class="p-4 border rounded-lg">
+                                        <h4 class="font-bold">B. Kontak Pribadi</h4>
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>Gulir ke bawah dan lengkapi semua kolom bertanda bintang (*).</li>
+                                            <li>Klik tombol <strong>"Simpan"</strong> di bagian ini setelah selesai.</li>
+                                        </ul>
+                                        <img src="gambar/gambar12.jpg" alt="Tampilan bagian Kontak Pribadi" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                                    </div>
+                                    <div class="p-4 border rounded-lg">
+                                        <h4 class="font-bold">C. Data Pendukung</h4>
+                                         <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>Gulir ke bawah, isi <strong>NIK</strong> & <strong>No. KK</strong>, lalu klik tombol verifikasi.</li>
+                                            <li>Lanjutkan mengisi data lain bertanda bintang (*).</li>
+                                            <li>Klik tombol <strong>"Simpan"</strong> di paling bawah halaman.</li>
+                                        </ul>
+                                        <img src="gambar/gambar13.jpg" alt="Tampilan bagian Data Pendukung" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                                    </div>
+                                </div>
+                            </li>
+                        </ol>
+                        <div class="mt-6 flex justify-between no-print">
+                            <a href="#unit-verifikasi" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Unit Verifikasi</a>
+                            <a href="#pdm-mandiri" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Jenis Data →</a>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div id="pdm-mandiri" class="step-card bg-green-50 p-6 rounded-xl border border-green-200">
+                            <h2 class="text-2xl font-semibold mb-4 text-green-800">4. Update Data Mandiri ✅</h2>
+                            <p class="mb-4 text-green-700">Untuk riwayat di bawah ini, Anda dapat <strong>menambah data baru</strong> secara mandiri melalui tombol <strong>"+ Tambah Baru"</strong> atau klik tombol <b>UBAH DATA</b>.</p>
+                            <img src="gambar/gambar14.jpg" alt="Contoh tombol Tambah Baru" class="mt-2 mb-4 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            <ul class="space-y-2">
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Diklat Struktural</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Jabatan</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Keluarga</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Organisasi</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Penghargaan</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Profesi</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Sertifikasi</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat SKP</li>
+                            </ul>
+                        </div>
+
+                        <div id="bantuan-verifikator" class="step-card bg-orange-50 p-6 rounded-xl border border-orange-200">
+                            <h2 class="text-2xl font-semibold mb-4 text-orange-800">5. Update Data Via BKPSDM 📞</h2>
+                            <p class="mb-4 text-orange-700">Riwayat di bawah ini <strong>tidak bisa</strong> diubah mandiri. Jika ada kesalahan, periksa dokumen dan hubungi narahubung BKPSDM Kota Pariaman.</p>
+                             <img src="gambar/gambar15.jpg" alt="Contoh detail riwayat" class="mt-2 mb-4 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            <ul class="space-y-2">
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Angka Kredit</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat CLTN</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat CPNS/PNS</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Hukuman Disiplin</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Laporan Kinerja</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Pangkat & Golongan</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Peninjauan Masa Kerja</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Pindah Instansi</li>
+                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Pendidikan</li>
+                            </ul>
+                        </div>
+                    </div>
+                     <div class="mt-8 flex justify-between no-print">
+                        <a href="#update-profil" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Update Profil</a>
+                        <a href="#daftarisi" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Kembali ke Daftar Isi ↑</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
+            <p>Panduan ini dibuat oleh BKPSDM Kota Pariaman. Terakhir diperbarui: September 2025.</p>
+        </footer>
+
+    </div>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="no-print hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+        <div class="relative max-w-4xl max-h-full">
+            <img id="modal-img" src="" alt="Tampilan Gambar Diperbesar" class="max-w-full max-h-[90vh] object-contain rounded-lg">
+            <button id="close-modal" class="absolute top-2 right-2 text-white bg-gray-800 bg-opacity-50 rounded-full p-2 hover:bg-opacity-75">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab-button');
+        const contents = document.querySelectorAll('.tab-content');
+        const tocLinks = document.querySelectorAll('.toc-link');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                contents.forEach(content => {
+                    if (content.id === target) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+        
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    const parentTabContent = targetElement.closest('.tab-content');
+                    if (parentTabContent) {
+                        const targetTabId = parentTabContent.id;
+                        const targetTabButton = document.querySelector(`.tab-button[data-tab="${targetTabId}"]`);
+                        
+                        if (targetTabButton && !targetTabButton.classList.contains('active')) {
+                            targetTabButton.click();
+                        }
+                    }
+                    
+                    setTimeout(() => {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        targetElement.classList.add('ring-2', 'ring-blue-400', 'ring-offset-2');
+                        setTimeout(() => {
+                           targetElement.classList.remove('ring-2', 'ring-blue-400', 'ring-offset-2');
+                        }, 2000);
+                    }, 150);
+                }
+            });
+        });
+        
+        const downloadBtn = document.getElementById('download-btn');
+        downloadBtn.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const content = document.getElementById('main-content');
+            const downloadButton = document.getElementById('download-btn');
+            const originalButtonText = downloadButton.innerHTML;
+
+            downloadButton.disabled = true;
+            downloadButton.innerHTML = '<span>Mengunduh...</span>';
+            
+            const activeTab = document.querySelector('.tab-button.active').dataset.tab;
+            
+            contents.forEach(c => c.classList.remove('hidden'));
+            
+            html2canvas(content, {
+                scale: 2,
+                useCORS: true,
+                onclone: (document) => {
+                    document.getElementById('main-content').style.padding = '20px';
+                }
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                const ratio = canvasWidth / canvasHeight;
+                const imgWidth = pdfWidth;
+                const imgHeight = imgWidth / ratio;
+                
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pdfHeight;
+
+                while (heightLeft > 0) {
+                    position = position - pdfHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pdfHeight;
+                }
+                
+                pdf.save('Panduan_MyASN_Pariaman.pdf');
+
+                contents.forEach(c => {
+                    if (c.id !== activeTab) {
+                        c.classList.add('hidden');
+                    }
+                });
+
+                downloadButton.disabled = false;
+                downloadButton.innerHTML = originalButtonText;
+            }).catch(err => {
+                 console.error("Gagal membuat PDF:", err);
+                 contents.forEach(c => {
+                    if (c.id !== activeTab) {
+                        c.classList.add('hidden');
+                    }
+                });
+                downloadButton.disabled = false;
+                downloadButton.innerHTML = originalButtonText;
+            });
+        });
+
+        const modal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('modal-img');
+        const closeModalBtn = document.getElementById('close-modal');
+        const zoomableImages = document.querySelectorAll('.zoomable-image');
+
+        zoomableImages.forEach(img => {
+            img.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+                modalImg.src = img.src;
+            });
+        });
+
+        const closeModal = () => {
+            modal.classList.add('hidden');
+            modalImg.src = ''; 
+        };
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+
