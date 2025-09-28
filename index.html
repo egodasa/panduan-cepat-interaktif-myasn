@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -10,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Calm Blue & Gray -->
-    <!-- Application Structure Plan: Panduan ini diubah menjadi SPA dengan antarmuka tab (Daftar Isi, Persiapan, Prosedur) untuk mengorganisir konten secara logis. Daftar Isi berfungsi sebagai hub navigasi utama. Di dalam tab Prosedur, digunakan pendekatan langkah-demi-langkah. Struktur ini dipilih untuk mengubah panduan statis menjadi pengalaman yang terkelola dan interaktif, memungkinkan pengguna melacak kemajuan mereka dan fokus pada satu tugas pada satu waktu, yang secara signifikan meningkatkan usabilitas. -->
-    <!-- Visualization & Content Choices: Karena dokumen sumber adalah panduan prosedural tanpa data kuantitatif, tidak ada chart yang digunakan. Interaktivitas dicapai melalui: 1) Antarmuka Tab untuk navigasi tingkat atas. 2) Tautan anchor dari Daftar Isi untuk navigasi cepat. 3) Kartu dan ikon yang jelas secara visual. Pilihan ini secara langsung mendukung tujuan untuk membuat panduan lebih mudah diikuti. -->
+    <!-- Application Structure Plan: Panduan ini diubah menjadi SPA dengan antarmuka tab (Beranda, Daftar Isi, Persiapan, Prosedur, Tanya Jawab) untuk mengorganisir konten secara logis. Beranda berfungsi sebagai halaman pembuka interaktif. Daftar Isi berfungsi sebagai hub navigasi utama. Struktur ini dipilih untuk mengubah panduan statis menjadi pengalaman yang terkelola dan interaktif, memungkinkan pengguna melacak kemajuan mereka dan fokus pada satu tugas pada satu waktu, yang secara signifikan meningkatkan usabilitas. -->
+    <!-- Visualization & Content Choices: Karena dokumen sumber adalah panduan prosedural tanpa data kuantitatif, tidak ada chart yang digunakan. Interaktivitas dicapai melalui: 1) Antarmuka Tab untuk navigasi tingkat atas. 2) Tautan anchor dari Daftar Isi untuk navigasi cepat. 3) Kartu dan ikon yang jelas secara visual. 4) Halaman beranda interaktif. Pilihan ini secara langsung mendukung tujuan untuk membuat panduan lebih mudah diikuti. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -34,6 +33,11 @@
         }
         .zoomable-image {
             cursor: zoom-in;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
         }
         @media print {
             .no-print {
@@ -79,7 +83,10 @@
 
         <div class="mb-8 border-b border-gray-200 no-print">
             <nav class="flex flex-wrap -mb-px" aria-label="Tabs">
-                <button class="tab-button active w-1/3 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="daftarisi">
+                 <button class="tab-button active w-1/2 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="beranda">
+                    <span class="mr-2">🏠</span> Beranda
+                </button>
+                <button class="tab-button w-1/2 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="daftarisi">
                     <span class="mr-2">📚</span> Daftar Isi
                 </button>
                 <button class="tab-button w-1/3 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="persiapan">
@@ -88,11 +95,31 @@
                 <button class="tab-button w-1/3 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="prosedur">
                     <span class="mr-2">🚀</span> Prosedur PDM
                 </button>
+                <button class="tab-button w-1/3 sm:w-auto text-lg font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 py-4 px-4" data-tab="faq">
+                    <span class="mr-2">❓</span> Tanya Jawab
+                </button>
             </nav>
         </div>
 
         <main id="main-content">
-            <div id="daftarisi" class="tab-content">
+             <div id="beranda" class="tab-content">
+                <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                    <h2 class="text-2xl font-semibold mb-2">Selamat Datang di Panduan MyASN</h2>
+                    <p class="text-gray-600 mb-6">Pilih salah satu opsi di bawah ini untuk memulai.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button id="go-to-pdm" class="group text-left p-6 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition">
+                            <h3 class="text-xl font-bold text-blue-800">Panduan PDM Lengkap</h3>
+                            <p class="text-blue-700 mt-2">Ikuti langkah demi langkah cara melakukan Pemutakhiran Data Mandiri (PDM) dari awal hingga akhir.</p>
+                        </button>
+                        <button id="go-to-faq" class="group text-left p-6 bg-yellow-50 hover:bg-yellow-100 rounded-lg border border-yellow-200 transition">
+                            <h3 class="text-xl font-bold text-yellow-800">Tanya Jawab</h3>
+                            <p class="text-yellow-700 mt-2">Temukan jawaban cepat untuk masalah umum seperti lupa password, ganti email, atau kendala saat login.</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="daftarisi" class="tab-content hidden">
                 <div class="bg-white p-6 rounded-xl shadow-sm">
                     <h2 class="text-2xl font-semibold mb-4">Daftar Isi</h2>
                     <ul class="space-y-3">
@@ -105,15 +132,17 @@
                             </ul>
                         </li>
                         <li>
-                            <span class="text-lg font-semibold text-gray-800">C. Prosedur Pemutakhiran Data Mandiri</span>
-                            <ul class="list-disc list-inside ml-6 mt-2 space-y-2 text-md">
+                            <a href="#prosedur-pdm" class="toc-link text-blue-600 hover:underline text-lg">C. Prosedur Pemutakhiran Data Mandiri</a>
+                             <ul class="list-disc list-inside ml-6 mt-2 space-y-2 text-md">
                                 <li><a href="#akses-akun" class="toc-link text-gray-700 hover:text-blue-600">1. Mengakses Akun MyASN</a></li>
                                 <li><a href="#unit-verifikasi" class="toc-link text-gray-700 hover:text-blue-600">2. Langkah Wajib Awal: Mengatur Unit Verifikasi</a></li>
-                                <li><a href="#update-profil" class="toc-link text-gray-700 hover:text-blue-600">3. Memperbarui Profil Pribadi (Wajib)</a></li>
-                                <li><a href="#pdm-mandiri" class="toc-link text-gray-700 hover:text-blue-600">4. Data yang Dapat Dimutakhirkan Secara Mandiri (PDM)</a></li>
-                                <li><a href="#bantuan-verifikator" class="toc-link text-gray-700 hover:text-blue-600">5. Data yang Memerlukan Bantuan Verifikator (BKPSDM Kota Pariaman)</a></li>
+                                <li><a href="#prioritas-update" class="toc-link text-gray-700 hover:text-blue-600">3. Prioritas Utama Pembaruan Data</a></li>
+                                <li><a href="#update-profil" class="toc-link text-gray-700 hover:text-blue-600">4. Panduan Lengkap Memperbarui Profil</a></li>
+                                <li><a href="#jenis-update" class="toc-link text-gray-700 hover:text-blue-600">5. Mengenali Jenis Pembaruan Data</a></li>
+                                <li><a href="#rincian-data" class="toc-link text-gray-700 hover:text-blue-600">6. Rincian Jenis Data & Syarat Berkas</a></li>
                             </ul>
                         </li>
+                         <li><a href="#faq-section" class="toc-link text-blue-600 hover:underline text-lg">D. Tanya Jawab</a></li>
                     </ul>
                     <div class="mt-6 text-right no-print">
                         <a href="#dasar-hukum" class="toc-link inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -221,10 +250,10 @@
             </div>
 
             <div id="prosedur" class="tab-content hidden">
-                <div class="space-y-8">
+                <div id="prosedur-pdm" class="space-y-8">
                     
                     <div id="akses-akun" class="step-card bg-white p-6 rounded-xl shadow-sm">
-                        <h2 class="text-2xl font-semibold mb-4">1. Mengakses Akun MyASN</h2>
+                        <h2 class="text-2xl font-semibold mb-4">C.1. Mengakses Akun MyASN</h2>
                         <ol class="list-decimal list-inside space-y-4">
                             <li>Buka <a href="https://asndigital.bkn.go.id/" target="_blank" class="text-blue-600 hover:underline font-semibold">asndigital.bkn.go.id</a>.
                                 <img src="gambar/gambar1.jpg" alt="Tampilan halaman utama ASN Digital" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
@@ -252,7 +281,7 @@
                     </div>
 
                     <div id="unit-verifikasi" class="step-card bg-white p-6 rounded-xl shadow-sm">
-                        <h2 class="text-2xl font-semibold mb-4">2. Langkah Wajib Awal: Mengatur Unit Verifikasi</h2>
+                        <h2 class="text-2xl font-semibold mb-4">C.2. Langkah Wajib Awal: Mengatur Unit Verifikasi</h2>
                         <p class="mb-4 text-red-600 bg-red-50 p-3 rounded-md">Ini adalah langkah <strong>KRUSIAL</strong> agar setiap data yang Anda ajukan dapat diverifikasi oleh BKPSDM Kota Pariaman.</p>
                         <ol class="list-decimal list-inside space-y-4">
                             <li>Di halaman utama MyASN (Home), fokus pada bagian <strong>"Update Data"</strong>. Kemudian, gulir ke bawah dan klik <strong>"Lihat Semua"</strong>.
@@ -272,12 +301,51 @@
                         </ol>
                         <div class="mt-6 flex justify-between no-print">
                             <a href="#akses-akun" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Akses Akun</a>
-                            <a href="#update-profil" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Update Profil →</a>
+                            <a href="#prioritas-update" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Prioritas Utama →</a>
+                        </div>
+                    </div>
+                    
+                    <div id="prioritas-update" class="step-card bg-yellow-50 p-6 rounded-xl border-2 border-dashed border-yellow-400">
+                        <h2 class="text-2xl font-semibold mb-4 text-yellow-900">C.3. Prioritas Utama Pembaruan Data</h2>
+                        <p class="mb-4 text-yellow-800">Sebelum melanjutkan ke data lainnya, pastikan <strong>4 jenis data berikut ini sudah lengkap dan terbaru</strong> karena sangat sering digunakan untuk keperluan administrasi kepegawaian.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4">
+                                <span class="text-2xl">👤</span>
+                                <div>
+                                    <h3 class="font-bold text-lg">Profil Pribadi</h3>
+                                    <p class="text-gray-700">Pastikan <strong>Foto, NIK, No. KK, dan No. HP</strong> valid dan terbaru. Detail cara pembaruan ada di <a href="#update-profil" class="toc-link text-blue-600 font-semibold hover:underline">langkah berikutnya</a>.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start gap-4">
+                                <span class="text-2xl">📄</span>
+                                <div>
+                                    <h3 class="font-bold text-lg">Riwayat Jabatan</h3>
+                                    <p class="text-gray-700">Wajib ada riwayat jabatan terakhir/terbaru beserta scan PDF SK Jabatan yang asli. Riwayat ini <strong>bisa Anda update sendiri</strong> melalui menu PDM.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <span class="text-2xl">📈</span>
+                                <div>
+                                    <h3 class="font-bold text-lg">Riwayat Pangkat/Golongan</h3>
+                                    <p class="text-gray-700">Wajib ada riwayat pangkat/golongan terakhir/terbaru beserta scan PDF SK yang asli. Riwayat ini <strong>harus diupdate melalui narahubung BKPSDM Kota Pariaman</strong>. Proses verifikasi hingga ke BKN Pusat memerlukan waktu sekitar <strong>3 - 5 hari kerja</strong>.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <span class="text-2xl">🎓</span>
+                                <div>
+                                    <h3 class="font-bold text-lg">Riwayat Pendidikan</h3>
+                                    <p class="text-gray-700">Wajib mencantumkan pendidikan terakhir beserta scan PDF Ijazah dan Transkrip Nilai yang asli. Sama seperti riwayat pangkat, pembaruan ini <strong>harus melalui narahubung BKPSDM Kota Pariaman</strong> dan memerlukan waktu verifikasi sekitar <strong>3 - 5 hari kerja</strong>.</p>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="mt-6 flex justify-between no-print">
+                            <a href="#unit-verifikasi" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Unit Verifikasi</a>
+                            <a href="#update-profil" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Lanjutkan Panduan →</a>
                         </div>
                     </div>
 
                     <div id="update-profil" class="step-card bg-white p-6 rounded-xl shadow-sm">
-                        <h2 class="text-2xl font-semibold mb-4">3. Memperbarui Profil Pribadi (Wajib)</h2>
+                        <h2 class="text-2xl font-semibold mb-4">C.4. Panduan Lengkap Memperbarui Profil</h2>
                         <ol class="list-decimal list-inside space-y-6">
                             <li><strong>Akses Menu:</strong> Dari halaman "Update Data", klik ikon <strong>"Riwayat Ubah Profile"</strong>.
                                 <img src="gambar/gambar10.jpg" alt="Lokasi menu Riwayat Ubah Profile" class="mt-2 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
@@ -314,47 +382,185 @@
                             </li>
                         </ol>
                         <div class="mt-6 flex justify-between no-print">
-                            <a href="#unit-verifikasi" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Unit Verifikasi</a>
-                            <a href="#pdm-mandiri" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Jenis Data →</a>
+                            <a href="#prioritas-update" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Prioritas Utama</a>
+                            <a href="#jenis-update" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Jenis Data →</a>
+                        </div>
+                    </div>
+                    
+                    <div id="jenis-update" class="step-card bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-semibold mb-4">C.5. Mengenali Jenis Pembaruan Data</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                <h3 class="font-bold text-lg text-green-800">Pembaruan Mandiri (PDM) ✅</h3>
+                                <p class="text-green-700 mt-2">Ciri utamanya adalah adanya tombol <strong>"+ Tambah Baru"</strong> atau ikon titik tiga (⋮) untuk opsi edit pada daftar riwayat.</p>
+                                 <img src="gambar/gambar14.jpg" alt="Contoh tombol Tambah Baru" class="mt-4 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </div>
+                             <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                                <h3 class="font-bold text-lg text-orange-800">Bantuan Verifikator 📞</h3>
+                                <p class="text-orange-700 mt-2">Untuk data jenis ini, <strong>tidak ada</strong> tombol tambah baru. Pembaruan harus melalui narahubung BKPSDM Kota Pariaman.</p>
+                                 <img src="gambar/gambar15.jpg" alt="Contoh detail riwayat tanpa tombol tambah" class="mt-4 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
+                            </div>
+                        </div>
+                         <div class="mt-6 flex justify-between no-print">
+                            <a href="#update-profil" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Update Profil</a>
+                            <a href="#rincian-data" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Rincian Data →</a>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div id="pdm-mandiri" class="step-card bg-green-50 p-6 rounded-xl border border-green-200">
-                            <h2 class="text-2xl font-semibold mb-4 text-green-800">4. Update Data Mandiri ✅</h2>
-                            <p class="mb-4 text-green-700">Untuk riwayat di bawah ini, Anda dapat <strong>menambah data baru</strong> secara mandiri melalui tombol <strong>"+ Tambah Baru"</strong> atau klik tombol <b>UBAH DATA</b>.</p>
-                            <img src="gambar/gambar14.jpg" alt="Contoh tombol Tambah Baru" class="mt-2 mb-4 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
-                            <ul class="space-y-2">
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Diklat Struktural</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Jabatan</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Keluarga</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Organisasi</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Penghargaan</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Profesi</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Sertifikasi</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat SKP</li>
-                            </ul>
-                        </div>
+                    <div id="rincian-data" class="step-card bg-white p-6 rounded-xl shadow-sm">
+                         <h2 class="text-2xl font-semibold mb-4">C.6. Rincian Jenis Data & Syarat Berkas</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                                <h3 class="text-xl font-semibold mb-4 text-green-800">Data yang Dapat Diupdate Mandiri</h3>
+                                <ul class="space-y-2">
+                                    <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Diklat Struktural</li>
+                                    <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Jabatan</li>
+                                    <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Keluarga</li>
+                                    <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Organisasi</li>
+                                    <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Penghargaan</li>
+                                    <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Profesi</li>
+                                    <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Sertifikasi</li>
+                                    <li class="p-3 bg-white rounded-md shadow-sm">Riwayat SKP</li>
+                                </ul>
+                            </div>
 
-                        <div id="bantuan-verifikator" class="step-card bg-orange-50 p-6 rounded-xl border border-orange-200">
-                            <h2 class="text-2xl font-semibold mb-4 text-orange-800">5. Update Data Via BKPSDM 📞</h2>
-                            <p class="mb-4 text-orange-700">Riwayat di bawah ini <strong>tidak bisa</strong> diubah mandiri. Jika ada kesalahan, periksa dokumen dan hubungi narahubung BKPSDM Kota Pariaman.</p>
-                             <img src="gambar/gambar15.jpg" alt="Contoh detail riwayat" class="mt-2 mb-4 w-full rounded-lg border border-gray-200 shadow-sm zoomable-image">
-                            <ul class="space-y-2">
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Angka Kredit</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat CLTN</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat CPNS/PNS</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Hukuman Disiplin</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Laporan Kinerja</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Pangkat & Golongan</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Peninjauan Masa Kerja</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Pindah Instansi</li>
-                                <li class="p-3 bg-white rounded-md shadow-sm">Riwayat Pendidikan</li>
-                            </ul>
+                            <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                                <h3 class="text-xl font-semibold mb-4 text-orange-800">Data yang Memerlukan Bantuan</h3>
+                                <div class="space-y-2">
+                                    <div class="faq-item">
+                                        <button class="faq-question w-full text-left flex justify-between items-center p-3 bg-white hover:bg-gray-50 rounded-lg shadow-sm">
+                                            <span class="font-semibold">Riwayat Pangkat & Golongan</span>
+                                            <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                        </button>
+                                        <div class="faq-answer -mt-1 p-3 bg-white border-t rounded-b-lg">
+                                            <p class="font-semibold text-sm text-gray-600">Syarat Berkas:</p>
+                                            <ul class="list-disc list-inside mt-1 pl-4 text-sm text-gray-700">
+                                                <li>Scan PDF SK Pangkat/Golongan terakhir yang asli.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="faq-item">
+                                        <button class="faq-question w-full text-left flex justify-between items-center p-3 bg-white hover:bg-gray-50 rounded-lg shadow-sm">
+                                            <span class="font-semibold">Riwayat Pendidikan</span>
+                                            <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                        </button>
+                                        <div class="faq-answer -mt-1 p-3 bg-white border-t rounded-b-lg">
+                                            <p class="font-semibold text-sm text-gray-600">Syarat Berkas:</p>
+                                            <ul class="list-disc list-inside mt-1 pl-4 text-sm text-gray-700">
+                                                <li>Scan PDF Ijazah yang asli.</li>
+                                                <li>Scan PDF Transkrip Nilai yang asli.</li>
+                                                <li>Scan PDF SK Kenaikan Pangkat yang mencantumkan gelar pendidikan tersebut.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="faq-item">
+                                        <button class="faq-question w-full text-left flex justify-between items-center p-3 bg-white hover:bg-gray-50 rounded-lg shadow-sm">
+                                            <span class="font-semibold">Riwayat CPNS/PNS</span>
+                                            <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                        </button>
+                                        <div class="faq-answer -mt-1 p-3 bg-white border-t rounded-b-lg">
+                                            <p class="font-semibold text-sm text-gray-600">Syarat Berkas:</p>
+                                            <ul class="list-disc list-inside mt-1 pl-4 text-sm text-gray-700">
+                                                <li>Scan PDF SK CPNS yang asli.</li>
+                                                <li>Scan PDF SK PNS yang asli.</li>
+                                                <li>Scan PDF SPMT (Surat Perintah Melaksanakan Tugas) yang asli.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 bg-white rounded-md shadow-sm text-gray-500">Riwayat Angka Kredit</div>
+                                    <div class="p-3 bg-white rounded-md shadow-sm text-gray-500">Riwayat CLTN</div>
+                                    <div class="p-3 bg-white rounded-md shadow-sm text-gray-500">Riwayat Laporan Kinerja</div>
+                                    <div class="p-3 bg-white rounded-md shadow-sm text-gray-500">Riwayat Peninjauan Masa Kerja</div>
+                                    <div class="p-3 bg-white rounded-md shadow-sm text-gray-500">Riwayat Pindah Instansi</div>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="mt-6 flex justify-between no-print">
+                            <a href="#jenis-update" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Jenis Update</a>
+                            <a href="#faq-section" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Berikutnya: Tanya Jawab →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="faq" class="tab-content hidden">
+                 <div id="faq-section" class="step-card bg-white p-6 rounded-xl shadow-sm">
+                    <h2 class="text-2xl font-semibold mb-4">D. Tanya Jawab</h2>
+                    <p class="text-gray-600 mb-6">Klik pada setiap pertanyaan di bawah ini untuk melihat jawabannya.</p>
+                    <div class="space-y-4">
+                        <div class="faq-item">
+                            <button class="faq-question w-full text-left flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                                <span class="font-semibold">1. Saya tidak bisa login karena tidak tahu atau lupa password.</span>
+                                <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="faq-answer mt-2 p-4 bg-white border rounded-lg">
+                                <p>Silakan gunakan fitur <strong>Reset Password</strong> yang tersedia di halaman login ASN Digital. Tutorial lengkap untuk melakukan reset password bisa Anda lihat di YouTube pada <a href="https://www.youtube.com/watch?v=6bZPiny-gOo" target="_blank" class="text-blue-600 hover:underline">tautan ini</a>.</p>
+                            </div>
+                        </div>
+                         <div class="faq-item">
+                            <button class="faq-question w-full text-left flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                                <span class="font-semibold">2. Saya tidak bisa reset password/reset MFA karena email lupa atau mau ganti email.</span>
+                                <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="faq-answer mt-2 p-4 bg-white border rounded-lg">
+                                <p>Untuk kasus ini, Anda tidak bisa melakukannya secara mandiri. Silakan hubungi narahubung <a href="#kontak-bantuan" class="toc-link text-blue-600 hover:underline">BKPSDM Kota Pariaman</a> yang sesuai dengan Perangkat Daerah Anda untuk meminta bantuan perubahan data email.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question w-full text-left flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                                <span class="font-semibold">3. Saat aktivasi MFA, kode OTP dari authenticator selalu salah.</span>
+                                <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="faq-answer mt-2 p-4 bg-white border rounded-lg">
+                                <p>Kunci utamanya adalah kecepatan. Saat QR Code muncul di layar komputer:</p>
+                                <ol class="list-decimal list-inside pl-4 mt-2 space-y-1">
+                                    <li>Segera isi kolom <strong>"Device Name"</strong> (misal: HP Android).</li>
+                                    <li>Buka aplikasi authenticator di ponsel Anda.</li>
+                                    <li>Segera masukkan kode OTP 6 digit yang muncul di ponsel ke kolom OTP di MyASN <strong>sebelum kode tersebut berganti</strong> (biasanya setiap 30 detik).</li>
+                                </ol>
+                                <p class="mt-2">Jika kode di ponsel sudah telanjur berganti sebelum Anda selesai mengetik, prosesnya akan gagal dan Anda harus mengulang proses login dari awal.</p>
+                            </div>
+                        </div>
+                         <div class="faq-item">
+                            <button class="faq-question w-full text-left flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                                <span class="font-semibold">4. Data yang saya ajukan statusnya "menunggu verifikasi", apa artinya?</span>
+                                <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="faq-answer mt-2 p-4 bg-white border rounded-lg">
+                                <p>Status tersebut berarti data Anda telah berhasil diajukan dan sedang dalam antrean untuk diperiksa oleh tim verifikator di BKPSDM Kota Pariaman. Proses ini memerlukan waktu karena setiap data dan dokumen pendukung harus diperiksa kesesuaiannya. Mohon ditunggu, statusnya akan berubah setelah proses verifikasi selesai.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question w-full text-left flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                                <span class="font-semibold">5. Kenapa saya gagal mengunggah dokumen?</span>
+                                <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="faq-answer mt-2 p-4 bg-white border rounded-lg">
+                                <p>Kegagalan unggah dokumen biasanya disebabkan oleh dua hal:</p>
+                                <ul class="list-disc list-inside pl-4 mt-2 space-y-1">
+                                   <li><strong>Ukuran File:</strong> Pastikan ukuran file PDF tidak melebihi <strong>1 MB</strong>.</li>
+                                   <li><strong>Format File:</strong> Pastikan file yang Anda unggah adalah format PDF. Sistem mungkin akan menolak format lain seperti JPG atau Word.</li>
+                                </ul>
+                                <p class="mt-2">Coba kompres atau ubah format file Anda jika masih gagal.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question w-full text-left flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                                <span class="font-semibold">6. Kode reset MFA/password tidak masuk ke email saya.</span>
+                                <svg class="w-5 h-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="faq-answer mt-2 p-4 bg-white border rounded-lg">
+                                <p>Masalah ini terkadang terjadi karena server email sedang sibuk. Coba beberapa solusi berikut secara berurutan:</p>
+                                <ol class="list-decimal list-inside pl-4 mt-2 space-y-1">
+                                    <li><strong>Coba lagi di luar jam sibuk</strong>, misalnya pada malam hari.</li>
+                                    <li>Jika masih belum berhasil, tunggu dan coba lagi secara berkala dalam <strong>1x24 jam hingga 2x24 jam</strong>.</li>
+                                    <li>Jika setelah 2x24 jam kode tetap tidak masuk, kemungkinan ada masalah dengan email Anda. Langkah terakhir adalah <strong>mengganti email</strong> dengan menghubungi narahubung <a href="#kontak-bantuan" class="toc-link text-blue-600 hover:underline">BKPSDM Kota Pariaman</a>.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
                      <div class="mt-8 flex justify-between no-print">
-                        <a href="#update-profil" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Update Profil</a>
+                        <a href="#rincian-data" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">← Sebelumnya: Rincian Data</a>
                         <a href="#daftarisi" class="toc-link inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Kembali ke Daftar Isi ↑</a>
                     </div>
                 </div>
@@ -380,145 +586,151 @@
     </div>
 
     <script>
-        const tabs = document.querySelectorAll('.tab-button');
-        const contents = document.querySelectorAll('.tab-content');
-        const tocLinks = document.querySelectorAll('.toc-link');
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            const goToPdmBtn = document.getElementById('go-to-pdm');
+            const goToFaqBtn = document.getElementById('go-to-faq');
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const target = tab.dataset.tab;
+            function switchTab(targetTabId) {
+                const targetTabButton = document.querySelector(`.tab-button[data-tab="${targetTabId}"]`);
+                if (targetTabButton) {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    targetTabButton.classList.add('active');
 
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+                    contents.forEach(content => {
+                        content.classList.toggle('hidden', content.id !== targetTabId);
+                    });
+                }
+            }
 
-                contents.forEach(content => {
-                    if (content.id === target) {
-                        content.classList.remove('hidden');
-                    } else {
-                        content.classList.add('hidden');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            goToPdmBtn.addEventListener('click', () => switchTab('daftarisi'));
+            goToFaqBtn.addEventListener('click', () => switchTab('faq'));
+
+            tocLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        const parentTabContent = targetElement.closest('.tab-content');
+                        if (parentTabContent) {
+                            switchTab(parentTabContent.id);
+                        }
+                        
+                        setTimeout(() => {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            targetElement.classList.add('ring-2', 'ring-blue-400', 'ring-offset-2');
+                            setTimeout(() => {
+                               targetElement.classList.remove('ring-2', 'ring-blue-400', 'ring-offset-2');
+                            }, 2000);
+                        }, 150);
                     }
                 });
             });
-        });
-        
-        tocLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href').substring(1);
-                const targetElement = document.getElementById(targetId);
+            
+            const downloadBtn = document.getElementById('download-btn');
+            downloadBtn.addEventListener('click', () => {
+                const { jsPDF } = window.jspdf;
+                const content = document.getElementById('main-content');
+                const downloadButton = document.getElementById('download-btn');
+                const originalButtonText = downloadButton.innerHTML;
 
-                if (targetElement) {
-                    const parentTabContent = targetElement.closest('.tab-content');
-                    if (parentTabContent) {
-                        const targetTabId = parentTabContent.id;
-                        const targetTabButton = document.querySelector(`.tab-button[data-tab="${targetTabId}"]`);
-                        
-                        if (targetTabButton && !targetTabButton.classList.contains('active')) {
-                            targetTabButton.click();
-                        }
+                downloadButton.disabled = true;
+                downloadButton.innerHTML = '<span>Mengunduh...</span>';
+                
+                const activeTab = document.querySelector('.tab-button.active').dataset.tab;
+                
+                contents.forEach(c => c.classList.remove('hidden'));
+                
+                html2canvas(content, {
+                    scale: 2,
+                    useCORS: true,
+                    onclone: (document) => {
+                        document.getElementById('main-content').style.padding = '20px';
                     }
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const canvasWidth = canvas.width;
+                    const canvasHeight = canvas.height;
+                    const ratio = canvasWidth / canvasHeight;
+                    const imgWidth = pdfWidth;
+                    const imgHeight = imgWidth / ratio;
                     
-                    setTimeout(() => {
-                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        targetElement.classList.add('ring-2', 'ring-blue-400', 'ring-offset-2');
-                        setTimeout(() => {
-                           targetElement.classList.remove('ring-2', 'ring-blue-400', 'ring-offset-2');
-                        }, 2000);
-                    }, 150);
-                }
-            });
-        });
-        
-        const downloadBtn = document.getElementById('download-btn');
-        downloadBtn.addEventListener('click', () => {
-            const { jsPDF } = window.jspdf;
-            const content = document.getElementById('main-content');
-            const downloadButton = document.getElementById('download-btn');
-            const originalButtonText = downloadButton.innerHTML;
-
-            downloadButton.disabled = true;
-            downloadButton.innerHTML = '<span>Mengunduh...</span>';
-            
-            const activeTab = document.querySelector('.tab-button.active').dataset.tab;
-            
-            contents.forEach(c => c.classList.remove('hidden'));
-            
-            html2canvas(content, {
-                scale: 2,
-                useCORS: true,
-                onclone: (document) => {
-                    document.getElementById('main-content').style.padding = '20px';
-                }
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                const canvasWidth = canvas.width;
-                const canvasHeight = canvas.height;
-                const ratio = canvasWidth / canvasHeight;
-                const imgWidth = pdfWidth;
-                const imgHeight = imgWidth / ratio;
-                
-                let heightLeft = imgHeight;
-                let position = 0;
-                
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pdfHeight;
-
-                while (heightLeft > 0) {
-                    position = position - pdfHeight;
-                    pdf.addPage();
+                    let heightLeft = imgHeight;
+                    let position = 0;
+                    
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pdfHeight;
+
+                    while (heightLeft > 0) {
+                        position = position - pdfHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pdfHeight;
+                    }
+                    
+                    pdf.save('Panduan_MyASN_Pariaman.pdf');
+                    switchTab(activeTab);
+
+                    downloadButton.disabled = false;
+                    downloadButton.innerHTML = originalButtonText;
+                }).catch(err => {
+                     console.error("Gagal membuat PDF:", err);
+                     switchTab(activeTab);
+                    downloadButton.disabled = false;
+                    downloadButton.innerHTML = originalButtonText;
+                });
+            });
+
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-img');
+            const closeModalBtn = document.getElementById('close-modal');
+            const zoomableImages = document.querySelectorAll('.zoomable-image');
+
+            zoomableImages.forEach(img => {
+                img.addEventListener('click', () => {
+                    modal.classList.remove('hidden');
+                    modalImg.src = img.src;
+                });
+            });
+
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                modalImg.src = ''; 
+            };
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
                 }
-                
-                pdf.save('Panduan_MyASN_Pariaman.pdf');
-
-                contents.forEach(c => {
-                    if (c.id !== activeTab) {
-                        c.classList.add('hidden');
-                    }
+            });
+            
+            document.querySelectorAll('.faq-question').forEach(button => {
+                button.addEventListener('click', () => {
+                    const answer = button.nextElementSibling;
+                    const icon = button.querySelector('svg');
+                    
+                    if (answer.style.maxHeight) {
+                        answer.style.maxHeight = null;
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        icon.style.transform = 'rotate(-180deg)';
+                    } 
                 });
-
-                downloadButton.disabled = false;
-                downloadButton.innerHTML = originalButtonText;
-            }).catch(err => {
-                 console.error("Gagal membuat PDF:", err);
-                 contents.forEach(c => {
-                    if (c.id !== activeTab) {
-                        c.classList.add('hidden');
-                    }
-                });
-                downloadButton.disabled = false;
-                downloadButton.innerHTML = originalButtonText;
             });
         });
-
-        const modal = document.getElementById('image-modal');
-        const modalImg = document.getElementById('modal-img');
-        const closeModalBtn = document.getElementById('close-modal');
-        const zoomableImages = document.querySelectorAll('.zoomable-image');
-
-        zoomableImages.forEach(img => {
-            img.addEventListener('click', () => {
-                modal.classList.remove('hidden');
-                modalImg.src = img.src;
-            });
-        });
-
-        const closeModal = () => {
-            modal.classList.add('hidden');
-            modalImg.src = ''; 
-        };
-
-        closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
     </script>
 
 </body>
